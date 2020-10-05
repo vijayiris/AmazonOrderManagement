@@ -1,0 +1,18 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">	
+
+<suite thread-count="1" verbose="1" name="RMS Suite" annotations="JDK" parallel="tests">   
+
+   
+  <test name="Amazon-1">  
+	 <classes>
+	   
+	  <class name="com.rms.test.OrderManagement"/>
+	   <!--  <class name="com.rms.test.BaseTest"/> -->  
+       <!-- <class name="com.rms.test.TestManageresource"/> -->  	   
+	  <!--  <class name="com.rms.test.TestResourceAllocation"/> -->
+	   <!-- <class name="com.rms.test.TestResourceAssignment"/> -->
+	 </classes>
+   </test>      
+</suite>
+
+
