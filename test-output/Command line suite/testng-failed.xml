@@ -5,7 +5,6 @@
     <classes>
       <class name="com.rms.test.OrderManagement">
         <methods>
-          <include name="tearDown"/>
           <include name="setUp"/>
         </methods>
       </class> <!-- com.rms.test.OrderManagement -->

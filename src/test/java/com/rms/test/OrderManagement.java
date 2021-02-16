@@ -11,6 +11,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -31,9 +32,6 @@ public class OrderManagement {
 	
 	Xls_Reader xlsReader = new Xls_Reader("C:\\Amazon\\OrderTemplate.xlsx") ;
 	//Xls_Reader xlsReader = new Xls_Reader("./TestDataExcel/OrderTemplate.xlsx") ;
-	
-	
-	
 	
 	
 	public OrderManagement(){
@@ -141,15 +139,44 @@ public class OrderManagement {
 		Thread.sleep(Integer.parseInt(WAITBETWEENPAGES));
 		
 		
+		List <WebElement> proceedCheckOutbuttonNew = driver.findElements(By.xpath("//input[@value='Proceed to checkout']"));	
+		for(WebElement proceedChkoutBtnNew : proceedCheckOutbuttonNew) {
+	
+			proceedChkoutBtnNew.click();
+			
+		}
 		
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class,'a-checkbox sc-gift-option a-align-top a-size-small')]/label/input")));
-		WebElement giftCheckBox = driver.findElement(By.xpath("//div[contains(@class,'a-checkbox sc-gift-option a-align-top a-size-small')]/label/input"));
-		giftCheckBox.click();
+		List <WebElement> giftCheckBox = driver.findElements(By.xpath("//div[contains(@class,'a-checkbox sc-gift-option a-align-top a-size-small')]/label/input"));
+		for(WebElement giftChkBox : giftCheckBox) {
+			giftChkBox.click();
+		}
+		
 		Thread.sleep(2000);
 		Thread.sleep(Integer.parseInt(WAITBETWEENPAGES));
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("hlb-ptc-btn-native")));
-		WebElement proceedToCheckOut = driver.findElement(By.id("hlb-ptc-btn-native"));
-		proceedToCheckOut.click();
+		
+		List <WebElement> proceedCheckOutbuttonOld = driver.findElements(By.id("hlb-ptc-btn-native"));
+		for(WebElement proceedCheckOutBtnOld : proceedCheckOutbuttonOld) {
+			
+			proceedCheckOutBtnOld.click();
+		}
+		
+		//wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class,'a-checkbox sc-gift-option a-align-top a-size-small')]/label/input")));
+		//WebElement giftCheckBox = driver.findElement(By.xpath("//div[contains(@class,'a-checkbox sc-gift-option a-align-top a-size-small')]/label/input"));
+		//giftCheckBox.click();	
+		//wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("post-atc-cart-text")));
+		
+
+
+		
+		
+		/*
+		 * Thread.sleep(2000); Thread.sleep(Integer.parseInt(WAITBETWEENPAGES));
+		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(
+		 * "hlb-ptc-btn-native"))); WebElement proceedToCheckOut =
+		 * driver.findElement(By.id("hlb-ptc-btn-native")); proceedToCheckOut.click();
+		 */
+		
+		
 		Thread.sleep(2000);
 		Thread.sleep(Integer.parseInt(WAITBETWEENPAGES));
 		List <WebElement> continueBtnOnSharePaymentPage = driver.findElements(By.xpath("//input[@title='Continue' and @class='a-button-input']"));
@@ -169,52 +196,87 @@ public class OrderManagement {
 			Thread.sleep(3000);
 		}
 		
-			
-		WebElement totalAddressCount = driver.findElement(By.xpath("//div[contains(@class,'a-text-center pagination')]/span"));
-		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", totalAddressCount);
 		
+		
+		List <WebElement> totalAddressCountList = driver.findElements(By.xpath("//div[contains(@class,'a-text-center pagination')]/span"));
+		for(WebElement totalAddressCount : totalAddressCountList) {
+			
+			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", totalAddressCount);
+			Thread.sleep(1000);
+			Thread.sleep(Integer.parseInt(WAITBETWEENPAGES));
+		}
+
+		String countryToBeSelected = xlsReader.getCellData("order", 10, i);
+		WebElement countryDropdown = driver.findElement(By.xpath("//span[@data-action='a-dropdown-button']"));	
+		countryDropdown.click();
+		List <WebElement> countryList = driver.findElements(By.xpath("//ul[@id='1_dropdown_combobox']/li"));
+		for(WebElement country : countryList) {
+			
+			System.out.println(country.getText());
+			if(country.getText().equals(countryToBeSelected)) {
+				country.click();
+			}
+		}
 		Thread.sleep(1000);
-		Thread.sleep(Integer.parseInt(WAITBETWEENPAGES));
-		WebElement fullName = driver.findElement(By.id("enterAddressFullName"));
+		//WebElement fullName = driver.findElement(By.id("enterAddressFullName"));
+		WebElement fullName = driver.findElement(By.id("address-ui-widgets-enterAddressFullName"));
 		fullName.clear();
 		fullName.click();
 		fullName.sendKeys(xlsReader.getCellData("order", 4, i));
-		WebElement addressline1 = driver.findElement(By.id("enterAddressAddressLine1"));
+		//WebElement addressline1 = driver.findElement(By.id("enterAddressAddressLine1"));
+		WebElement addressline1 = driver.findElement(By.id("address-ui-widgets-enterAddressLine1"));		
 		addressline1.click();
 		addressline1.clear();
 		addressline1.sendKeys(xlsReader.getCellData("order", 5, i));
 		
-		WebElement city = driver.findElement(By.id("enterAddressCity"));
+		//WebElement city = driver.findElement(By.id("enterAddressCity"));
+		WebElement city = driver.findElement(By.id("address-ui-widgets-enterAddressCity"));		
 		city.click();
 		city.clear();
 		city.sendKeys(xlsReader.getCellData("order", 7, i));
-		WebElement state = driver.findElement(By.id("enterAddressStateOrRegion"));
-		state.click();
-		state.clear();
-		state.sendKeys(xlsReader.getCellData("order", 8, i));
 		
-		WebElement postalCode = driver.findElement(By.id("enterAddressPostalCode"));
+		
+		if(countryToBeSelected.equals("Canada")) {
+			String canadaStateToBeSelected = xlsReader.getCellData("order", 8, i);
+			WebElement stateDropdown = driver.findElement(By.xpath("(//span[contains(@class,'a-button-text a-declarative')])[2]"));	
+			stateDropdown.click();
+			List <WebElement> canadaStateList = driver.findElements(By.xpath("(//ul[contains(@class,'a-nostyle a-list-link')])[2]/li"));
+			for(WebElement canadaState : canadaStateList) {
+				
+				System.out.println(canadaState.getText());
+				if(canadaState.getText().equals(canadaStateToBeSelected)) {
+					canadaState.click();
+				}
+			}	
+			
+			
+		}else {
+			//WebElement state = driver.findElement(By.id("enterAddressStateOrRegion"));
+			WebElement state = driver.findElement(By.id("address-ui-widgets-enterAddressStateOrRegion"));		
+			state.click();
+			state.clear();
+			state.sendKeys(xlsReader.getCellData("order", 8, i));
+			
+		}
+
+		
+		//WebElement postalCode = driver.findElement(By.id("enterAddressPostalCode"));
+		WebElement postalCode = driver.findElement(By.id("address-ui-widgets-enterAddressPostalCode"));		
 		postalCode.click();
 		postalCode.clear();
 		postalCode.sendKeys(xlsReader.getCellData("order", 9, i).split("\\.")[0]);
-		
-		
-		String countryToBeSelected = xlsReader.getCellData("order", 10, i);
-		Select countryDropdown = new Select(driver.findElement(By.id("enterAddressCountryCode")));
-		countryDropdown.selectByValue(countryToBeSelected);
-		
-		WebElement phoneNumber = driver.findElement(By.id("enterAddressPhoneNumber"));
+						
+		//WebElement phoneNumber = driver.findElement(By.id("enterAddressPhoneNumber"));
+		WebElement phoneNumber = driver.findElement(By.id("address-ui-widgets-enterAddressPhoneNumber"));
 		phoneNumber.click();
 		phoneNumber.clear();
 		phoneNumber.sendKeys(xlsReader.getCellData("order", 11, i));
-		WebElement useAddressOnlyOnceCheckBox = driver.findElement(By.xpath("//input[@name='hideAddressFromDefaultAddressBook' and @value=1]"));
-		useAddressOnlyOnceCheckBox.click();
-		Thread.sleep(2000);
-		Thread.sleep(Integer.parseInt(WAITBETWEENPAGES));
-		WebElement deliverToThisAddress = driver.findElement(By.xpath("//input[contains(@class,'a-button-text submit-button-with-name') and @name='shipToThisAddress']"));
-		deliverToThisAddress.click();
-		Thread.sleep(2000);
-		Thread.sleep(Integer.parseInt(WAITBETWEENPAGES));
+		
+		List <WebElement> addAddressButtonList = driver.findElements(By.xpath("//input[@class='a-button-input']"));
+		for(WebElement addAddressButton : addAddressButtonList )
+		{
+			addAddressButton.click();
+		}
 		
 		//If Error exist in Address
 		List <WebElement> errorMessageIfAddressIsWrong = driver.findElements(By.xpath("//div[contains(@class,'a-box a-alert a-alert-error a-spacing-base ')]"));
@@ -224,8 +286,41 @@ public class OrderManagement {
         	driver.get("https://www.amazon.com/");
         }
 		
+		List <WebElement> useAddressOnlyOnceCheckBoxlist = driver.findElements(By.xpath("//input[@name='hideAddressFromDefaultAddressBook' and @value=1]"));
+		for(WebElement useAddressOnlyOnceCheckBox : useAddressOnlyOnceCheckBoxlist )
+		{
+			useAddressOnlyOnceCheckBox.click();
+			Thread.sleep(2000);
+			Thread.sleep(Integer.parseInt(WAITBETWEENPAGES));
+		}
+
+		
+		/*
+		 * WebElement useAddressOnlyOnceCheckBox = driver.findElement(By.
+		 * xpath("//input[@name='hideAddressFromDefaultAddressBook' and @value=1]"));
+		 * useAddressOnlyOnceCheckBox.click(); Thread.sleep(2000);
+		 * Thread.sleep(Integer.parseInt(WAITBETWEENPAGES));
+		 */
+		
+		List <WebElement> deliverToThisAddressList = driver.findElements(By.xpath("//input[contains(@class,'a-button-text submit-button-with-name') and @name='shipToThisAddress']"));
+		for(WebElement deliverToThisAddress : deliverToThisAddressList )
+		{
+			deliverToThisAddress.click();
+			Thread.sleep(2000);
+			Thread.sleep(Integer.parseInt(WAITBETWEENPAGES));
+			
+		}
+
 		
 		
+		/*
+		 * WebElement deliverToThisAddress = driver.findElement(By.
+		 * xpath("//input[contains(@class,'a-button-text submit-button-with-name') and @name='shipToThisAddress']"
+		 * )); deliverToThisAddress.click(); Thread.sleep(2000);
+		 * Thread.sleep(Integer.parseInt(WAITBETWEENPAGES));
+		 */
+		
+				
 		List <WebElement> deliverToThisAddress1 = driver.findElements(By.xpath("//input[@name='useSelectedAddress']"));
 		for(WebElement deliverToThisAddressBtn : deliverToThisAddress1 ) {
 			deliverToThisAddressBtn.click();
